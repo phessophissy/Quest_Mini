@@ -1,0 +1,21 @@
+{
+  "name": "questcoin-miniapp",
+  "version": "1.0.0",
+  "description": "Quest-and-earn token system for Base Chain",
+  "author": "QuestCoin Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AdekunleBamz/Quest_Mini"
+  },
+  "keywords": [
+    "web3",
+    "ethereum",
+    "base",
+    "farcaster",
+    "defi",
+    "quest",
+    "earn",
+    "token"
+  ]
+}
