@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuestCoin - Complete Quests, Earn QUEST</title>
+    
+    <!-- Farcaster Frame Meta Tags -->
+    <meta property="fc:frame" content="vNext" />
+    <meta property="fc:frame:image" content="https://your-domain.com/frame-image.png" />
+    <meta property="fc:frame:button:1" content="🎮 Start Questing" />
+    <meta property="fc:frame:button:1:action" content="link" />
+    <meta property="fc:frame:button:1:target" content="https://your-domain.com" />
+    <meta property="og:title" content="QuestCoin - Earn QUEST Tokens" />
+    <meta property="og:image" content="https://your-domain.com/og-image.png" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #7C3AED;
+            --secondary: #06B6D4;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --bg-dark: #0F0F1A;
+            --bg-card: #1A1A2E;
+            --bg-card-hover: #252542;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --border: #2D2D44;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+                var(--bg-dark);
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        
+        /* Wallet Button */
+        .wallet-btn {
+            width: 100%;
+            padding: 16px 24px;
+            border-radius: 16px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        
+        .wallet-btn.connect {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+        
+        .wallet-btn.connected {
+            background: var(--bg-card);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+        
+        .wallet-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        /* Quest Cards */
+        .quests-container {
+            margin-bottom: 24px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .quest-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .quest-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+        }
+        
+        .quest-card.completed {
+            border-color: var(--success);
+            opacity: 0.8;
+        }
+        
+        .quest-card.processing {
+            border-color: var(--warning);
+        }
+        
+        .quest-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+        
+        .quest-info {
+            flex: 1;
+        }
+        
+        .quest-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .quest-reward {
+            font-size: 13px;
+            color: var(--secondary);
+        }
+        
+        .quest-status {
+            font-size: 20px;
+        }
+        
+        /* Main Action Button */
+        .action-btn {
+            width: 100%;
+            padding: 20px;
+            border-radius: 20px;
+            border: none;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .action-btn.primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(139, 92, 246, 0.4);
+        }
+        
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .action-btn.loading {
+            pointer-events: none;
+        }
+        
+        .action-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+        
+        @keyframes shimmer {
+            100% { left: 100%; }
+        }
+        
+        /* Boost Section */
+        .boost-section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 24px;
+            border: 1px solid var(--border);
+        }
+        
+        .boost-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .boost-multiplier {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--warning);
+        }
+        
+        .boost-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .boost-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--warning), var(--success));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Transaction Status */
+        .tx-status {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: none;
+        }
+        
+        .tx-status.show {
+            display: block;
+        }
+        
+        .tx-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .tx-item:last-child {
+            border-bottom: none;
+        }
+        
+        .tx-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 500;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .toast.success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .toast.error {
+            background: var(--error);
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 400px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .stat-value {
+                font-size: 20px;
+            }
+        }
+        
+        /* Settings Panel */
+        .settings-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        
+        .settings-panel {
+            display: none;
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+        
+        .settings-panel.show {
+            display: block;
+        }
+        
+        .setting-item {
+            margin-bottom: 16px;
+        }
+        
+        .setting-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        
+        .setting-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .setting-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <button class="settings-toggle" onclick="toggleSettings()">⚙️</button>
+    
+    <div class="container">
+        <header class="header">
+            <div class="logo">🎮</div>
+            <h1 class="title">QuestCoin</h1>
+            <p class="subtitle">Complete quests. Earn QUEST tokens.</p>
+        </header>
+        
+        <!-- Settings Panel -->
+        <div id="settingsPanel" class="settings-panel">
+            <h3 class="section-title">⚙️ Contract Settings</h3>
+            <div class="setting-item">
+                <div class="setting-label">QuestToken Address</div>
+                <input type="text" id="tokenAddress" class="setting-input" placeholder="0x...">
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">QuestHub Address</div>
+                <input type="text" id="hubAddress" class="setting-input" placeholder="0x...">
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">QuestVault Address</div>
+                <input type="text" id="vaultAddress" class="setting-input" placeholder="0x...">
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">QuestBooster Address</div>
+                <input type="text" id="boosterAddress" class="setting-input" placeholder="0x...">
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">Gas Limit (per tx)</div>
+                <input type="number" id="gasLimit" class="setting-input" value="200000">
+            </div>
+            <button class="wallet-btn connect" onclick="saveSettings()" style="margin-top: 10px;">
+                💾 Save Settings
+            </button>
+        </div>
+        
+        <!-- Wallet Connection -->
+        <button id="walletBtn" class="wallet-btn connect" onclick="connectWallet()">
+            🔗 Connect Wallet
+        </button>
+        
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="pendingRewards">0</div>
+                <div class="stat-label">Pending QUEST</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalClaimed">0</div>
+                <div class="stat-label">Total Claimed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="currentStreak">0</div>
+                <div class="stat-label">Day Streak 🔥</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="boostMultiplier">1.0x</div>
+                <div class="stat-label">Boost</div>
+            </div>
+        </div>
+        
+        <!-- Quests -->
+        <div class="quests-container">
+            <h2 class="section-title">📋 Daily Quests</h2>
+            
+            <div class="quest-card" id="quest1" onclick="completeQuest('checkin')" style="cursor: pointer;">
+                <div class="quest-icon">✅</div>
+                <div class="quest-info">
+                    <div class="quest-name">Daily Check-in</div>
+                    <div class="quest-reward">+10 QUEST</div>
+                </div>
+                <div class="quest-status" id="quest1Status">⏳</div>
+            </div>
+            
+            <div class="quest-card" id="quest2" onclick="completeQuest('engage')" style="cursor: pointer;">
+                <div class="quest-icon">💬</div>
+                <div class="quest-info">
+                    <div class="quest-name">Engage</div>
+                    <div class="quest-reward">+10 QUEST</div>
+                </div>
+                <div class="quest-status" id="quest2Status">⏳</div>
+            </div>
+            
+            <div class="quest-card" id="quest3" onclick="completeQuest('commit')" style="cursor: pointer;">
+                <div class="quest-icon">🎯</div>
+                <div class="quest-info">
+                    <div class="quest-name">Commit</div>
+                    <div class="quest-reward">+10 QUEST</div>
+                </div>
+                <div class="quest-status" id="quest3Status">⏳</div>
+            </div>
+            
+            <div class="quest-card" id="quest4" onclick="completeQuest('claim')" style="cursor: pointer;">
+                <div class="quest-icon">🎁</div>
+                <div class="quest-info">
+                    <div class="quest-name">Claim Rewards</div>
+                    <div class="quest-reward">+20 QUEST bonus</div>
+                </div>
+                <div class="quest-status" id="quest4Status">⏳</div>
+            </div>
+        </div>
+        
+        <!-- Main Action Button -->
+        <button id="actionBtn" class="action-btn primary" onclick="executeAllQuests()" disabled>
+            🚀 Complete All Quests
+        </button>
+        
+        <!-- Transaction Status -->
+        <div id="txStatus" class="tx-status">
+            <div class="tx-item" id="tx1">
+                <div class="tx-spinner"></div>
+                <span>Check-in...</span>
+            </div>
+            <div class="tx-item" id="tx2">
+                <div class="tx-spinner"></div>
+                <span>Engage...</span>
+            </div>
+            <div class="tx-item" id="tx3">
+                <div class="tx-spinner"></div>
+                <span>Commit...</span>
+            </div>
+            <div class="tx-item" id="tx4">
+                <div class="tx-spinner"></div>
+                <span>Claim Rewards...</span>
+            </div>
+        </div>
+        
+        <!-- Boost Section -->
+        <div class="boost-section">
+            <div class="boost-header">
+                <span class="section-title" style="margin-bottom: 0;">⚡ Boost Progress</span>
+                <span class="boost-multiplier" id="boostDisplay">1.0x</span>
+            </div>
+            <div class="boost-bar">
+                <div class="boost-fill" id="boostFill" style="width: 10%;"></div>
+            </div>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">
+                Build your streak for up to 2.5x rewards!
+            </p>
+        </div>
+    </div>
+    
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
