@@ -1,0 +1,270 @@
+/* ===========================================
+   Quest Mini App - Badge Styles
+   Achievement badges and icons
+   =========================================== */
+
+/* Badge Base */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+/* Badge Variants */
+.badge--primary {
+    background: rgba(138, 43, 226, 0.15);
+    color: var(--primary-color);
+}
+
+.badge--secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+.badge--success {
+    background: rgba(76, 175, 80, 0.15);
+    color: var(--success-color);
+}
+
+.badge--warning {
+    background: rgba(255, 152, 0, 0.15);
+    color: var(--warning-color);
+}
+
+.badge--error {
+    background: rgba(244, 67, 54, 0.15);
+    color: var(--error-color);
+}
+
+.badge--info {
+    background: rgba(33, 150, 243, 0.15);
+    color: var(--info-color);
+}
+
+/* Badge Sizes */
+.badge--sm {
+    padding: 2px 6px;
+    font-size: 0.65rem;
+}
+
+.badge--lg {
+    padding: 6px 14px;
+    font-size: 0.875rem;
+}
+
+/* Booster Tier Badges */
+.badge--bronze {
+    background: linear-gradient(135deg, #cd7f32 0%, #8b4513 100%);
+    color: white;
+}
+
+.badge--silver {
+    background: linear-gradient(135deg, #c0c0c0 0%, #808080 100%);
+    color: white;
+}
+
+.badge--gold {
+    background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+    color: #1a1a2e;
+}
+
+.badge--platinum {
+    background: linear-gradient(135deg, #e5e4e2 0%, #b4b4b4 100%);
+    color: #1a1a2e;
+}
+
+.badge--diamond {
+    background: linear-gradient(135deg, #b9f2ff 0%, #4dd0e1 100%);
+    color: #1a1a2e;
+}
+
+/* Streak Badges */
+.streak-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.streak-badge__icon {
+    font-size: 1.25rem;
+}
+
+.streak-badge__count {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.streak-badge__label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Achievement Badge */
+.achievement-badge {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--surface-color);
+    border: 3px solid var(--border-color);
+    transition: all var(--transition-normal);
+}
+
+.achievement-badge--earned {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
+}
+
+.achievement-badge--locked {
+    opacity: 0.5;
+    filter: grayscale(1);
+}
+
+.achievement-badge__icon {
+    font-size: 2rem;
+}
+
+.achievement-badge__level {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-color);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50%;
+}
+
+/* Quest Type Badges */
+.quest-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.quest-badge--daily {
+    background: rgba(138, 43, 226, 0.15);
+    color: var(--primary-color);
+}
+
+.quest-badge--social {
+    background: rgba(33, 150, 243, 0.15);
+    color: var(--info-color);
+}
+
+.quest-badge--referral {
+    background: rgba(76, 175, 80, 0.15);
+    color: var(--success-color);
+}
+
+.quest-badge--staking {
+    background: rgba(255, 152, 0, 0.15);
+    color: var(--warning-color);
+}
+
+.quest-badge--special {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.2) 0%, rgba(255, 107, 107, 0.2) 100%);
+    color: var(--accent-color);
+}
+
+/* Notification Badge */
+.notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    background: var(--error-color);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border-radius: 9999px;
+}
+
+/* Status Badge with Dot */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--bg-tertiary);
+    border-radius: 9999px;
+    font-size: 0.8rem;
+}
+
+.status-badge__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-badge--online .status-badge__dot {
+    background: var(--success-color);
+    box-shadow: 0 0 6px var(--success-color);
+}
+
+.status-badge--offline .status-badge__dot {
+    background: var(--text-muted);
+}
+
+.status-badge--busy .status-badge__dot {
+    background: var(--warning-color);
+}
+
+/* Animated Badge */
+.badge--animated {
+    animation: badge-pulse 2s infinite;
+}
+
+@keyframes badge-pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* New Badge */
+.badge--new {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    color: white;
+    animation: badge-glow 2s infinite;
+}
+
+@keyframes badge-glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(138, 43, 226, 0.8);
+    }
+}
