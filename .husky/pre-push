@@ -1,0 +1,43 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 Running pre-push checks..."
+
+# Run tests before pushing
+echo "📋 Running tests..."
+if [ -d "contracts" ]; then
+    cd contracts
+    if [ -f "package.json" ]; then
+        # Check if tests exist
+        if npm run test --dry-run 2>/dev/null; then
+            npm run test || {
+                echo "❌ Tests failed! Please fix failing tests before pushing."
+                exit 1
+            }
+        fi
+    fi
+    cd ..
+fi
+
+# Check for sensitive data patterns
+echo "🔐 Checking for sensitive data..."
+sensitive_patterns="PRIVATE_KEY=0x|PRIVATE_KEY=[a-fA-F0-9]{64}|mnemonic.*=.*\w+(\s+\w+){11}"
+
+if git diff --cached --name-only | xargs grep -lE "$sensitive_patterns" 2>/dev/null; then
+    echo "❌ Sensitive data detected in staged files!"
+    echo "   Please remove private keys or mnemonics before pushing."
+    exit 1
+fi
+
+# Check for debug statements
+echo "🐛 Checking for debug statements..."
+debug_patterns="console\.log|debugger|TODO:|FIXME:|XXX:"
+warnings=$(git diff origin/main...HEAD --name-only | xargs grep -l "$debug_patterns" 2>/dev/null || true)
+
+if [ -n "$warnings" ]; then
+    echo "⚠️  Warning: Debug statements or TODOs found in:"
+    echo "$warnings"
+    echo "   Consider removing before pushing to production."
+fi
+
+echo "✅ Pre-push checks passed!"
