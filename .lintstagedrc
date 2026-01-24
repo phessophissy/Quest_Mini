@@ -1,0 +1,15 @@
+{
+  "*.{js,jsx,ts,tsx}": [
+    "eslint --fix",
+    "prettier --write"
+  ],
+  "*.{css,scss}": [
+    "prettier --write"
+  ],
+  "*.{html,json,md}": [
+    "prettier --write"
+  ],
+  "*.sol": [
+    "prettier --write --plugin=prettier-plugin-solidity"
+  ]
+}

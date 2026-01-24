@@ -1,0 +1,49 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Commit message format: <type>(<scope>): <subject>
+# Types: feat, fix, docs, style, refactor, test, chore, perf
+# Examples:
+#   feat(contracts): add quest achievement system
+#   fix(wallet): resolve connection timeout issue
+#   docs(readme): update installation instructions
+
+echo "📝 Validating commit message format..."
+
+# Read the commit message
+commit_msg=$(cat "$1")
+
+# Regex pattern for conventional commits
+pattern="^(feat|fix|docs|style|refactor|test|chore|perf|build|ci|revert)(\([a-z0-9\-]+\))?: .{1,100}$"
+
+# Check if commit message matches pattern (first line only)
+first_line=$(echo "$commit_msg" | head -n 1)
+
+if ! echo "$first_line" | grep -qE "$pattern"; then
+    echo "❌ Invalid commit message format!"
+    echo ""
+    echo "Commit message must follow Conventional Commits format:"
+    echo "  <type>(<scope>): <subject>"
+    echo ""
+    echo "Types: feat, fix, docs, style, refactor, test, chore, perf, build, ci, revert"
+    echo ""
+    echo "Examples:"
+    echo "  feat(contracts): add quest achievement system"
+    echo "  fix(wallet): resolve connection timeout issue"
+    echo "  docs(readme): update installation instructions"
+    echo ""
+    echo "Your commit message:"
+    echo "  $first_line"
+    echo ""
+    exit 1
+fi
+
+# Check subject length (max 100 characters)
+subject_length=$(echo "$first_line" | wc -c)
+if [ "$subject_length" -gt 101 ]; then
+    echo "❌ Commit subject too long! Maximum 100 characters."
+    echo "   Current length: $subject_length"
+    exit 1
+fi
+
+echo "✅ Commit message format is valid!"
