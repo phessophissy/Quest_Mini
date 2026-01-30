@@ -221,6 +221,9 @@ function initContracts() {
 async function loadUserData() {
     if (!userAddress || !areContractsConfigured()) return;
     
+    // Show loading skeletons
+    showLoadingSkeletons(true);
+    
     try {
         // Get vault stats
         const [pending, claimed, lastClaim] = await contracts.vault.getUserStats(userAddress);
@@ -251,9 +254,35 @@ async function loadUserData() {
         updateQuestStatus('quest2Status', status.engageDone);
         updateQuestStatus('quest3Status', status.commitDone);
         
+        // Hide loading skeletons after data loads
+        showLoadingSkeletons(false);
+        
     } catch (error) {
         console.error('Error loading user data:', error);
+        showLoadingSkeletons(false);
     }
+}
+
+// Toggle skeleton loading states
+function showLoadingSkeletons(show) {
+    const statCards = document.querySelectorAll('.stat-card');
+    const questCards = document.querySelectorAll('.quest-card');
+    
+    statCards.forEach(card => {
+        if (show) {
+            card.classList.add('loading');
+        } else {
+            card.classList.remove('loading');
+        }
+    });
+    
+    questCards.forEach(card => {
+        if (show) {
+            card.classList.add('loading');
+        } else {
+            card.classList.remove('loading');
+        }
+    });
 }
 
 function updateQuestStatus(elementId, completed) {

@@ -138,6 +138,7 @@
             padding: 20px;
             text-align: center;
             border: 1px solid var(--border);
+            min-height: 88px;
         }
         
         .stat-value {
@@ -150,6 +151,91 @@
             font-size: 12px;
             color: var(--text-secondary);
             margin-top: 4px;
+        }
+        
+        /* Skeleton Loading States */
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                var(--bg-card) 25%,
+                var(--bg-card-hover) 50%,
+                var(--bg-card) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s infinite linear;
+            border-radius: 8px;
+        }
+        
+        @keyframes skeleton-shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .skeleton-stat-value {
+            height: 28px;
+            width: 60%;
+            margin: 0 auto 8px;
+        }
+        
+        .skeleton-stat-label {
+            height: 14px;
+            width: 80%;
+            margin: 0 auto;
+        }
+        
+        .skeleton-quest-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+        
+        .skeleton-quest-name {
+            height: 18px;
+            width: 70%;
+            margin-bottom: 8px;
+        }
+        
+        .skeleton-quest-reward {
+            height: 14px;
+            width: 50%;
+        }
+        
+        .skeleton-quest-status {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+        
+        .stat-card.loading .stat-value,
+        .stat-card.loading .stat-label {
+            display: none;
+        }
+        
+        .quest-card.loading .quest-icon,
+        .quest-card.loading .quest-info,
+        .quest-card.loading .quest-status {
+            display: none;
+        }
+        
+        .skeleton-content {
+            display: none;
+        }
+        
+        .stat-card.loading .skeleton-content,
+        .quest-card.loading .skeleton-content {
+            display: block;
+        }
+        
+        .quest-card.loading .skeleton-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+        }
+        
+        .skeleton-quest-info {
+            flex: 1;
         }
         
         /* Quest Cards */
@@ -484,22 +570,38 @@
         </button>
         
         <!-- Stats -->
-        <div class="stats-grid">
-            <div class="stat-card">
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card loading" id="statPending">
                 <div class="stat-value" id="pendingRewards">0</div>
                 <div class="stat-label">Pending QUEST</div>
+                <div class="skeleton-content">
+                    <div class="skeleton skeleton-stat-value"></div>
+                    <div class="skeleton skeleton-stat-label"></div>
+                </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card loading" id="statClaimed">
                 <div class="stat-value" id="totalClaimed">0</div>
                 <div class="stat-label">Total Claimed</div>
+                <div class="skeleton-content">
+                    <div class="skeleton skeleton-stat-value"></div>
+                    <div class="skeleton skeleton-stat-label"></div>
+                </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card loading" id="statStreak">
                 <div class="stat-value" id="currentStreak">0</div>
                 <div class="stat-label">Day Streak 🔥</div>
+                <div class="skeleton-content">
+                    <div class="skeleton skeleton-stat-value"></div>
+                    <div class="skeleton skeleton-stat-label"></div>
+                </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card loading" id="statBoost">
                 <div class="stat-value" id="boostMultiplier">1.0x</div>
                 <div class="stat-label">Boost</div>
+                <div class="skeleton-content">
+                    <div class="skeleton skeleton-stat-value"></div>
+                    <div class="skeleton skeleton-stat-label"></div>
+                </div>
             </div>
         </div>
         
@@ -507,40 +609,72 @@
         <div class="quests-container">
             <h2 class="section-title">📋 Daily Quests</h2>
             
-            <div class="quest-card" id="quest1" onclick="completeQuest('checkin')" style="cursor: pointer;">
+            <div class="quest-card loading" id="quest1" onclick="completeQuest('checkin')" style="cursor: pointer;">
                 <div class="quest-icon">✅</div>
                 <div class="quest-info">
                     <div class="quest-name">Daily Check-in</div>
                     <div class="quest-reward">+10 QUEST</div>
                 </div>
                 <div class="quest-status" id="quest1Status">⏳</div>
+                <div class="skeleton-content">
+                    <div class="skeleton skeleton-quest-icon"></div>
+                    <div class="skeleton-quest-info">
+                        <div class="skeleton skeleton-quest-name"></div>
+                        <div class="skeleton skeleton-quest-reward"></div>
+                    </div>
+                    <div class="skeleton skeleton-quest-status"></div>
+                </div>
             </div>
             
-            <div class="quest-card" id="quest2" onclick="completeQuest('engage')" style="cursor: pointer;">
+            <div class="quest-card loading" id="quest2" onclick="completeQuest('engage')" style="cursor: pointer;">
                 <div class="quest-icon">💬</div>
                 <div class="quest-info">
                     <div class="quest-name">Engage</div>
                     <div class="quest-reward">+10 QUEST</div>
                 </div>
                 <div class="quest-status" id="quest2Status">⏳</div>
+                <div class="skeleton-content">
+                    <div class="skeleton skeleton-quest-icon"></div>
+                    <div class="skeleton-quest-info">
+                        <div class="skeleton skeleton-quest-name"></div>
+                        <div class="skeleton skeleton-quest-reward"></div>
+                    </div>
+                    <div class="skeleton skeleton-quest-status"></div>
+                </div>
             </div>
             
-            <div class="quest-card" id="quest3" onclick="completeQuest('commit')" style="cursor: pointer;">
+            <div class="quest-card loading" id="quest3" onclick="completeQuest('commit')" style="cursor: pointer;">
                 <div class="quest-icon">🎯</div>
                 <div class="quest-info">
                     <div class="quest-name">Commit</div>
                     <div class="quest-reward">+10 QUEST</div>
                 </div>
                 <div class="quest-status" id="quest3Status">⏳</div>
+                <div class="skeleton-content">
+                    <div class="skeleton skeleton-quest-icon"></div>
+                    <div class="skeleton-quest-info">
+                        <div class="skeleton skeleton-quest-name"></div>
+                        <div class="skeleton skeleton-quest-reward"></div>
+                    </div>
+                    <div class="skeleton skeleton-quest-status"></div>
+                </div>
             </div>
             
-            <div class="quest-card" id="quest4" onclick="completeQuest('claim')" style="cursor: pointer;">
+            <div class="quest-card loading" id="quest4" onclick="completeQuest('claim')" style="cursor: pointer;">
                 <div class="quest-icon">🎁</div>
                 <div class="quest-info">
                     <div class="quest-name">Claim Rewards</div>
                     <div class="quest-reward">+20 QUEST bonus</div>
                 </div>
                 <div class="quest-status" id="quest4Status">⏳</div>
+                <div class="skeleton-content">
+                    <div class="skeleton skeleton-quest-icon"></div>
+                    <div class="skeleton-quest-info">
+                        <div class="skeleton skeleton-quest-name"></div>
+                        <div class="skeleton skeleton-quest-reward"></div>
+                    </div>
+                    <div class="skeleton skeleton-quest-status"></div>
+                </div>
             </div>
         </div>
         
