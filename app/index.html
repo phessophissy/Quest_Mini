@@ -124,6 +124,25 @@
             box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
         }
         
+        .wallet-btn.connected:hover {
+            background: var(--bg-card-hover);
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2);
+        }
+        
+        .wallet-btn .copy-icon {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            font-size: 14px;
+        }
+        
+        .wallet-btn.connected:hover .copy-icon {
+            opacity: 1;
+        }
+        
+        .wallet-address-text {
+            cursor: pointer;
+        }
+        
         /* Stats Cards */
         .stats-grid {
             display: grid;

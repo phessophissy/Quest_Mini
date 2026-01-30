@@ -186,15 +186,61 @@ function updateWalletUI() {
     
     if (userAddress) {
         const shortAddr = `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
-        btn.innerHTML = `✅ ${shortAddr}`;
+        btn.innerHTML = `<span class="wallet-status">✅</span> <span class="wallet-address-text" title="Click to copy full address">${shortAddr}</span> <span class="copy-icon">📋</span>`;
         btn.classList.remove('connect');
         btn.classList.add('connected');
+        btn.onclick = copyAddressToClipboard;
         actionBtn.disabled = !areContractsConfigured();
     } else {
         btn.innerHTML = '🔗 Connect Wallet';
         btn.classList.add('connect');
         btn.classList.remove('connected');
+        btn.onclick = connectWallet;
         actionBtn.disabled = true;
+    }
+}
+
+// Copy wallet address to clipboard
+async function copyAddressToClipboard() {
+    if (!userAddress) {
+        await connectWallet();
+        return;
+    }
+    
+    try {
+        await navigator.clipboard.writeText(userAddress);
+        showToast('📋 Address copied to clipboard!', 'success');
+        
+        // Visual feedback on button
+        const btn = document.getElementById('walletBtn');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '✅ Copied!';
+        
+        setTimeout(() => {
+            updateWalletUI();
+        }, 1500);
+        
+        // Haptic feedback on mobile
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+    } catch (error) {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = userAddress;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        
+        try {
+            document.execCommand('copy');
+            showToast('📋 Address copied!', 'success');
+        } catch (err) {
+            showToast('Failed to copy address', 'error');
+        }
+        
+        document.body.removeChild(textArea);
     }
 }
 
