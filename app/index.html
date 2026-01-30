@@ -374,6 +374,55 @@
             100% { left: 100%; }
         }
         
+        /* Countdown Timer */
+        .quest-countdown {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-card-hover));
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .countdown-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .countdown-time {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+        }
+        
+        .countdown-unit {
+            display: flex;
+            align-items: baseline;
+        }
+        
+        .countdown-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--secondary);
+            min-width: 24px;
+            text-align: center;
+        }
+        
+        .countdown-suffix {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-left: 1px;
+        }
+        
+        .countdown-separator {
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin: 0 2px;
+        }
+        
         /* Boost Section */
         .boost-section {
             background: var(--bg-card);
@@ -741,7 +790,7 @@
     <div id="toast" class="toast"></div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
-    <script src="js/questTimer.js"></script>
+    <script src="js/countdown.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
