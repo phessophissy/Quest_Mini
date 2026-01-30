@@ -384,6 +384,11 @@ async function executeAllQuests() {
         updateTxStatus('tx4', 'success', 'Claimed ✅');
         updateQuestStatus('quest4Status', true);
         
+        // Celebrate with confetti!
+        if (typeof Confetti !== 'undefined') {
+            Confetti.questComplete();
+        }
+        
         showToast('🎉 All quests completed!', 'success');
         await loadUserData();
         
