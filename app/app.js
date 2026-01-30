@@ -61,12 +61,39 @@ let contracts = {};
 document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
     checkWalletConnection();
+    initKeyboardNavigation();
 });
+
+// Keyboard navigation for quest cards
+function initKeyboardNavigation() {
+    const questCards = document.querySelectorAll('.quest-card');
+    questCards.forEach(card => {
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                card.click();
+            }
+        });
+    });
+}
 
 // Settings
 function toggleSettings() {
     const panel = document.getElementById('settingsPanel');
-    panel.classList.toggle('show');
+    const toggle = document.querySelector('.settings-toggle');
+    const isHidden = panel.hasAttribute('hidden');
+    
+    if (isHidden) {
+        panel.removeAttribute('hidden');
+        panel.classList.add('show');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Close settings');
+    } else {
+        panel.setAttribute('hidden', '');
+        panel.classList.remove('show');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open settings');
+    }
 }
 
 function loadSettings() {
@@ -189,8 +216,10 @@ function updateWalletUI() {
         btn.innerHTML = `<span class="wallet-status">✅</span> <span class="wallet-address-text" title="Click to copy full address">${shortAddr}</span> <span class="copy-icon">📋</span>`;
         btn.classList.remove('connect');
         btn.classList.add('connected');
-        btn.onclick = copyAddressToClipboard;
-        actionBtn.disabled = !areContractsConfigured();
+        btn.setAttribute('aria-label', `Connected wallet: ${shortAddr}`);
+        const isEnabled = areContractsConfigured();
+        actionBtn.disabled = !isEnabled;
+        actionBtn.setAttribute('aria-disabled', (!isEnabled).toString());
     } else {
         btn.innerHTML = '🔗 Connect Wallet';
         btn.classList.add('connect');
