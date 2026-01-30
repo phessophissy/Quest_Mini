@@ -300,8 +300,10 @@ async function loadUserData() {
         updateQuestStatus('quest2Status', status.engageDone);
         updateQuestStatus('quest3Status', status.commitDone);
         
-        // Hide loading skeletons after data loads
-        showLoadingSkeletons(false);
+        // Update streak badges
+        if (typeof StreakBadges !== 'undefined') {
+            StreakBadges.update(Number(status.streak));
+        }
         
     } catch (error) {
         console.error('Error loading user data:', error);
