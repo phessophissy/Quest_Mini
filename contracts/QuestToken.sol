@@ -70,6 +70,13 @@ contract QuestToken is ERC20, Ownable, Pausable {
     }
     
     /**
+     * @notice Get circulating supply (total minted - burned)
+     */
+    function getCirculatingSupply() external view returns (uint256) {
+        return totalMinted;
+    }
+    
+    /**
      * @notice Pause token minting (emergency)
      */
     function pause() external onlyOwner {
