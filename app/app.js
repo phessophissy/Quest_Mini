@@ -61,12 +61,39 @@ let contracts = {};
 document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
     checkWalletConnection();
+    initKeyboardNavigation();
 });
+
+// Keyboard navigation for quest cards
+function initKeyboardNavigation() {
+    const questCards = document.querySelectorAll('.quest-card');
+    questCards.forEach(card => {
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                card.click();
+            }
+        });
+    });
+}
 
 // Settings
 function toggleSettings() {
     const panel = document.getElementById('settingsPanel');
-    panel.classList.toggle('show');
+    const toggle = document.querySelector('.settings-toggle');
+    const isHidden = panel.hasAttribute('hidden');
+    
+    if (isHidden) {
+        panel.removeAttribute('hidden');
+        panel.classList.add('show');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Close settings');
+    } else {
+        panel.setAttribute('hidden', '');
+        panel.classList.remove('show');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open settings');
+    }
 }
 
 function loadSettings() {
@@ -186,15 +213,63 @@ function updateWalletUI() {
     
     if (userAddress) {
         const shortAddr = `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
-        btn.innerHTML = `✅ ${shortAddr}`;
+        btn.innerHTML = `<span class="wallet-status">✅</span> <span class="wallet-address-text" title="Click to copy full address">${shortAddr}</span> <span class="copy-icon">📋</span>`;
         btn.classList.remove('connect');
         btn.classList.add('connected');
-        actionBtn.disabled = !areContractsConfigured();
+        btn.setAttribute('aria-label', `Connected wallet: ${shortAddr}`);
+        const isEnabled = areContractsConfigured();
+        actionBtn.disabled = !isEnabled;
+        actionBtn.setAttribute('aria-disabled', (!isEnabled).toString());
     } else {
         btn.innerHTML = '🔗 Connect Wallet';
         btn.classList.add('connect');
         btn.classList.remove('connected');
+        btn.onclick = connectWallet;
         actionBtn.disabled = true;
+    }
+}
+
+// Copy wallet address to clipboard
+async function copyAddressToClipboard() {
+    if (!userAddress) {
+        await connectWallet();
+        return;
+    }
+    
+    try {
+        await navigator.clipboard.writeText(userAddress);
+        showToast('📋 Address copied to clipboard!', 'success');
+        
+        // Visual feedback on button
+        const btn = document.getElementById('walletBtn');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '✅ Copied!';
+        
+        setTimeout(() => {
+            updateWalletUI();
+        }, 1500);
+        
+        // Haptic feedback on mobile
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+    } catch (error) {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = userAddress;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        
+        try {
+            document.execCommand('copy');
+            showToast('📋 Address copied!', 'success');
+        } catch (err) {
+            showToast('Failed to copy address', 'error');
+        }
+        
+        document.body.removeChild(textArea);
     }
 }
 
@@ -220,6 +295,9 @@ function initContracts() {
 // Load User Data
 async function loadUserData() {
     if (!userAddress || !areContractsConfigured()) return;
+    
+    // Show loading skeletons
+    showLoadingSkeletons(true);
     
     try {
         // Get vault stats
@@ -251,9 +329,37 @@ async function loadUserData() {
         updateQuestStatus('quest2Status', status.engageDone);
         updateQuestStatus('quest3Status', status.commitDone);
         
+        // Update streak badges
+        if (typeof StreakBadges !== 'undefined') {
+            StreakBadges.update(Number(status.streak));
+        }
+        
     } catch (error) {
         console.error('Error loading user data:', error);
+        showLoadingSkeletons(false);
     }
+}
+
+// Toggle skeleton loading states
+function showLoadingSkeletons(show) {
+    const statCards = document.querySelectorAll('.stat-card');
+    const questCards = document.querySelectorAll('.quest-card');
+    
+    statCards.forEach(card => {
+        if (show) {
+            card.classList.add('loading');
+        } else {
+            card.classList.remove('loading');
+        }
+    });
+    
+    questCards.forEach(card => {
+        if (show) {
+            card.classList.add('loading');
+        } else {
+            card.classList.remove('loading');
+        }
+    });
 }
 
 function updateQuestStatus(elementId, completed) {
@@ -306,6 +412,11 @@ async function executeAllQuests() {
         await tx4.wait();
         updateTxStatus('tx4', 'success', 'Claimed ✅');
         updateQuestStatus('quest4Status', true);
+        
+        // Celebrate with confetti!
+        if (typeof Confetti !== 'undefined') {
+            Confetti.questComplete();
+        }
         
         showToast('🎉 All quests completed!', 'success');
         await loadUserData();

@@ -1,0 +1,7 @@
+# ESLint ignore patterns
+node_modules/
+dist/
+build/
+coverage/
+contracts/*.sol
+*.min.js

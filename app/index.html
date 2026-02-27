@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="QuestCoin - Complete daily quests on Base Chain to earn QUEST tokens. Build streaks for up to 2.5x rewards!">
+    <meta name="theme-color" content="#8B5CF6">
     <title>QuestCoin - Complete Quests, Earn QUEST</title>
     
     <!-- Farcaster Frame Meta Tags -->
@@ -34,6 +36,50 @@
             --text-primary: #FFFFFF;
             --text-secondary: #A1A1AA;
             --border: #2D2D44;
+            --focus-ring: rgba(139, 92, 246, 0.5);
+        }
+        
+        /* Accessibility: Skip to main content link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            z-index: 10000;
+            text-decoration: none;
+            border-radius: 0 0 8px 0;
+            font-weight: 600;
+            transition: top 0.3s ease;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        /* Accessibility: Visually hidden but available to screen readers */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Focus styles for keyboard navigation */
+        *:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        
+        button:focus-visible,
+        .quest-card:focus-visible {
+            box-shadow: 0 0 0 4px var(--focus-ring);
         }
         
         body {
@@ -124,6 +170,25 @@
             box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
         }
         
+        .wallet-btn.connected:hover {
+            background: var(--bg-card-hover);
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2);
+        }
+        
+        .wallet-btn .copy-icon {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            font-size: 14px;
+        }
+        
+        .wallet-btn.connected:hover .copy-icon {
+            opacity: 1;
+        }
+        
+        .wallet-address-text {
+            cursor: pointer;
+        }
+        
         /* Stats Cards */
         .stats-grid {
             display: grid;
@@ -138,6 +203,7 @@
             padding: 20px;
             text-align: center;
             border: 1px solid var(--border);
+            min-height: 88px;
         }
         
         .stat-value {
@@ -150,6 +216,91 @@
             font-size: 12px;
             color: var(--text-secondary);
             margin-top: 4px;
+        }
+        
+        /* Skeleton Loading States */
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                var(--bg-card) 25%,
+                var(--bg-card-hover) 50%,
+                var(--bg-card) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s infinite linear;
+            border-radius: 8px;
+        }
+        
+        @keyframes skeleton-shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .skeleton-stat-value {
+            height: 28px;
+            width: 60%;
+            margin: 0 auto 8px;
+        }
+        
+        .skeleton-stat-label {
+            height: 14px;
+            width: 80%;
+            margin: 0 auto;
+        }
+        
+        .skeleton-quest-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+        
+        .skeleton-quest-name {
+            height: 18px;
+            width: 70%;
+            margin-bottom: 8px;
+        }
+        
+        .skeleton-quest-reward {
+            height: 14px;
+            width: 50%;
+        }
+        
+        .skeleton-quest-status {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+        
+        .stat-card.loading .stat-value,
+        .stat-card.loading .stat-label {
+            display: none;
+        }
+        
+        .quest-card.loading .quest-icon,
+        .quest-card.loading .quest-info,
+        .quest-card.loading .quest-status {
+            display: none;
+        }
+        
+        .skeleton-content {
+            display: none;
+        }
+        
+        .stat-card.loading .skeleton-content,
+        .quest-card.loading .skeleton-content {
+            display: block;
+        }
+        
+        .quest-card.loading .skeleton-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+        }
+        
+        .skeleton-quest-info {
+            flex: 1;
         }
         
         /* Quest Cards */
@@ -267,6 +418,55 @@
         
         @keyframes shimmer {
             100% { left: 100%; }
+        }
+        
+        /* Countdown Timer */
+        .quest-countdown {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-card-hover));
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .countdown-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .countdown-time {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+        }
+        
+        .countdown-unit {
+            display: flex;
+            align-items: baseline;
+        }
+        
+        .countdown-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--secondary);
+            min-width: 24px;
+            text-align: center;
+        }
+        
+        .countdown-suffix {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-left: 1px;
+        }
+        
+        .countdown-separator {
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin: 0 2px;
         }
         
         /* Boost Section */
@@ -439,155 +639,207 @@
     </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
+    <div class="bg-animation" aria-hidden="true"></div>
     
-    <button class="settings-toggle" onclick="toggleSettings()">⚙️</button>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <button 
+        class="settings-toggle" 
+        onclick="toggleSettings()" 
+        aria-label="Open settings" 
+        aria-expanded="false" 
+        aria-controls="settingsPanel"
+    >⚙️</button>
     
     <div class="container">
-        <header class="header">
+        <header class="header" role="banner">
             <div class="logo">🎮</div>
             <h1 class="title">QuestCoin</h1>
             <p class="subtitle">Complete quests. Earn QUEST tokens.</p>
         </header>
         
         <!-- Settings Panel -->
-        <div id="settingsPanel" class="settings-panel">
+        <div id="settingsPanel" class="settings-panel" role="region" aria-label="Contract Settings" hidden>
             <h3 class="section-title">⚙️ Contract Settings</h3>
             <div class="setting-item">
-                <div class="setting-label">QuestToken Address</div>
-                <input type="text" id="tokenAddress" class="setting-input" placeholder="0x...">
+                <label for="tokenAddress" class="setting-label">QuestToken Address</label>
+                <input type="text" id="tokenAddress" class="setting-input" placeholder="0x..." aria-describedby="tokenAddressHint">
+                <span id="tokenAddressHint" class="visually-hidden">Enter the QuestToken smart contract address</span>
             </div>
             <div class="setting-item">
-                <div class="setting-label">QuestHub Address</div>
-                <input type="text" id="hubAddress" class="setting-input" placeholder="0x...">
+                <label for="hubAddress" class="setting-label">QuestHub Address</label>
+                <input type="text" id="hubAddress" class="setting-input" placeholder="0x..." aria-describedby="hubAddressHint">
+                <span id="hubAddressHint" class="visually-hidden">Enter the QuestHub smart contract address</span>
             </div>
             <div class="setting-item">
-                <div class="setting-label">QuestVault Address</div>
-                <input type="text" id="vaultAddress" class="setting-input" placeholder="0x...">
+                <label for="vaultAddress" class="setting-label">QuestVault Address</label>
+                <input type="text" id="vaultAddress" class="setting-input" placeholder="0x..." aria-describedby="vaultAddressHint">
+                <span id="vaultAddressHint" class="visually-hidden">Enter the QuestVault smart contract address</span>
             </div>
             <div class="setting-item">
-                <div class="setting-label">QuestBooster Address</div>
-                <input type="text" id="boosterAddress" class="setting-input" placeholder="0x...">
+                <label for="boosterAddress" class="setting-label">QuestBooster Address</label>
+                <input type="text" id="boosterAddress" class="setting-input" placeholder="0x..." aria-describedby="boosterAddressHint">
+                <span id="boosterAddressHint" class="visually-hidden">Enter the QuestBooster smart contract address</span>
             </div>
             <div class="setting-item">
-                <div class="setting-label">Gas Limit (per tx)</div>
-                <input type="number" id="gasLimit" class="setting-input" value="200000">
+                <label for="gasLimit" class="setting-label">Gas Limit (per tx)</label>
+                <input type="number" id="gasLimit" class="setting-input" value="200000" min="100000" max="500000" aria-describedby="gasLimitHint">
+                <span id="gasLimitHint" class="visually-hidden">Gas limit for each transaction, default is 200000</span>
             </div>
-            <button class="wallet-btn connect" onclick="saveSettings()" style="margin-top: 10px;">
+            <button class="wallet-btn connect" onclick="saveSettings()" style="margin-top: 10px;" aria-label="Save contract settings">
                 💾 Save Settings
             </button>
         </div>
         
         <!-- Wallet Connection -->
-        <button id="walletBtn" class="wallet-btn connect" onclick="connectWallet()">
+        <button id="walletBtn" class="wallet-btn connect" onclick="connectWallet()" aria-live="polite">
             🔗 Connect Wallet
         </button>
         
         <!-- Stats -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="pendingRewards">0</div>
-                <div class="stat-label">Pending QUEST</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="totalClaimed">0</div>
-                <div class="stat-label">Total Claimed</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="currentStreak">0</div>
-                <div class="stat-label">Day Streak 🔥</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="boostMultiplier">1.0x</div>
-                <div class="stat-label">Boost</div>
-            </div>
-        </div>
+        <main id="main-content">
+        <section class="stats-grid" role="region" aria-label="Your Statistics">
+            <article class="stat-card" aria-labelledby="pendingLabel">
+                <div class="stat-value" id="pendingRewards" aria-live="polite">0</div>
+                <div class="stat-label" id="pendingLabel">Pending QUEST</div>
+            </article>
+            <article class="stat-card" aria-labelledby="claimedLabel">
+                <div class="stat-value" id="totalClaimed" aria-live="polite">0</div>
+                <div class="stat-label" id="claimedLabel">Total Claimed</div>
+            </article>
+            <article class="stat-card" aria-labelledby="streakLabel">
+                <div class="stat-value" id="currentStreak" aria-live="polite">0</div>
+                <div class="stat-label" id="streakLabel">Day Streak 🔥</div>
+            </article>
+            <article class="stat-card" aria-labelledby="boostLabel">
+                <div class="stat-value" id="boostMultiplier" aria-live="polite">1.0x</div>
+                <div class="stat-label" id="boostLabel">Boost</div>
+            </article>
+        </section>
         
         <!-- Quests -->
-        <div class="quests-container">
+        <section class="quests-container" role="region" aria-label="Daily Quests">
             <h2 class="section-title">📋 Daily Quests</h2>
             
-            <div class="quest-card" id="quest1" onclick="completeQuest('checkin')" style="cursor: pointer;">
-                <div class="quest-icon">✅</div>
+            <button 
+                class="quest-card" 
+                id="quest1" 
+                onclick="completeQuest('checkin')" 
+                role="button"
+                aria-describedby="quest1Reward quest1Status"
+                tabindex="0"
+            >
+                <div class="quest-icon" aria-hidden="true">✅</div>
                 <div class="quest-info">
                     <div class="quest-name">Daily Check-in</div>
-                    <div class="quest-reward">+10 QUEST</div>
+                    <div class="quest-reward" id="quest1Reward">+10 QUEST</div>
                 </div>
-                <div class="quest-status" id="quest1Status">⏳</div>
-            </div>
+                <div class="quest-status" id="quest1Status" aria-live="polite">⏳</div>
+            </button>
             
-            <div class="quest-card" id="quest2" onclick="completeQuest('engage')" style="cursor: pointer;">
-                <div class="quest-icon">💬</div>
+            <button 
+                class="quest-card" 
+                id="quest2" 
+                onclick="completeQuest('engage')" 
+                role="button"
+                aria-describedby="quest2Reward quest2Status"
+                tabindex="0"
+            >
+                <div class="quest-icon" aria-hidden="true">💬</div>
                 <div class="quest-info">
                     <div class="quest-name">Engage</div>
-                    <div class="quest-reward">+10 QUEST</div>
+                    <div class="quest-reward" id="quest2Reward">+10 QUEST</div>
                 </div>
-                <div class="quest-status" id="quest2Status">⏳</div>
-            </div>
+                <div class="quest-status" id="quest2Status" aria-live="polite">⏳</div>
+            </button>
             
-            <div class="quest-card" id="quest3" onclick="completeQuest('commit')" style="cursor: pointer;">
-                <div class="quest-icon">🎯</div>
+            <button 
+                class="quest-card" 
+                id="quest3" 
+                onclick="completeQuest('commit')" 
+                role="button"
+                aria-describedby="quest3Reward quest3Status"
+                tabindex="0"
+            >
+                <div class="quest-icon" aria-hidden="true">🎯</div>
                 <div class="quest-info">
                     <div class="quest-name">Commit</div>
-                    <div class="quest-reward">+10 QUEST</div>
+                    <div class="quest-reward" id="quest3Reward">+10 QUEST</div>
                 </div>
-                <div class="quest-status" id="quest3Status">⏳</div>
-            </div>
+                <div class="quest-status" id="quest3Status" aria-live="polite">⏳</div>
+            </button>
             
-            <div class="quest-card" id="quest4" onclick="completeQuest('claim')" style="cursor: pointer;">
-                <div class="quest-icon">🎁</div>
+            <button 
+                class="quest-card" 
+                id="quest4" 
+                onclick="completeQuest('claim')" 
+                role="button"
+                aria-describedby="quest4Reward quest4Status"
+                tabindex="0"
+            >
+                <div class="quest-icon" aria-hidden="true">🎁</div>
                 <div class="quest-info">
                     <div class="quest-name">Claim Rewards</div>
-                    <div class="quest-reward">+20 QUEST bonus</div>
+                    <div class="quest-reward" id="quest4Reward">+20 QUEST bonus</div>
                 </div>
-                <div class="quest-status" id="quest4Status">⏳</div>
-            </div>
-        </div>
+                <div class="quest-status" id="quest4Status" aria-live="polite">⏳</div>
+            </button>
+        </section>
         
         <!-- Main Action Button -->
-        <button id="actionBtn" class="action-btn primary" onclick="executeAllQuests()" disabled>
+        <button 
+            id="actionBtn" 
+            class="action-btn primary" 
+            onclick="executeAllQuests()" 
+            disabled
+            aria-disabled="true"
+            aria-describedby="actionBtnHint"
+        >
             🚀 Complete All Quests
         </button>
+        <span id="actionBtnHint" class="visually-hidden">Complete all daily quests in one transaction</span>
         
         <!-- Transaction Status -->
-        <div id="txStatus" class="tx-status">
-            <div class="tx-item" id="tx1">
-                <div class="tx-spinner"></div>
+        <section id="txStatus" class="tx-status" role="status" aria-live="polite" aria-label="Transaction Progress">
+            <div class="tx-item" id="tx1" aria-label="Check-in transaction status">
+                <div class="tx-spinner" aria-hidden="true"></div>
                 <span>Check-in...</span>
             </div>
-            <div class="tx-item" id="tx2">
-                <div class="tx-spinner"></div>
+            <div class="tx-item" id="tx2" aria-label="Engage transaction status">
+                <div class="tx-spinner" aria-hidden="true"></div>
                 <span>Engage...</span>
             </div>
-            <div class="tx-item" id="tx3">
-                <div class="tx-spinner"></div>
+            <div class="tx-item" id="tx3" aria-label="Commit transaction status">
+                <div class="tx-spinner" aria-hidden="true"></div>
                 <span>Commit...</span>
             </div>
-            <div class="tx-item" id="tx4">
-                <div class="tx-spinner"></div>
+            <div class="tx-item" id="tx4" aria-label="Claim rewards transaction status">
+                <div class="tx-spinner" aria-hidden="true"></div>
                 <span>Claim Rewards...</span>
             </div>
-        </div>
+        </section>
         
         <!-- Boost Section -->
-        <div class="boost-section">
+        <section class="boost-section" role="region" aria-labelledby="boostTitle">
             <div class="boost-header">
-                <span class="section-title" style="margin-bottom: 0;">⚡ Boost Progress</span>
-                <span class="boost-multiplier" id="boostDisplay">1.0x</span>
+                <span class="section-title" id="boostTitle" style="margin-bottom: 0;">⚡ Boost Progress</span>
+                <span class="boost-multiplier" id="boostDisplay" aria-live="polite">1.0x</span>
             </div>
-            <div class="boost-bar">
+            <div class="boost-bar" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" aria-label="Streak boost progress">
                 <div class="boost-fill" id="boostFill" style="width: 10%;"></div>
             </div>
             <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">
                 Build your streak for up to 2.5x rewards!
             </p>
-        </div>
+        </section>
+        </main>
     </div>
     
     <!-- Toast -->
-    <div id="toast" class="toast"></div>
+    <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <script src="js/achievements.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

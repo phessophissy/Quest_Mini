@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run lint-staged for staged files
+npx lint-staged
+
+# Run format check on staged files
+echo "🔍 Checking code formatting..."
+npx prettier --check "app/**/*.{js,css,html}" "contracts/**/*.sol" --ignore-unknown || {
+    echo "❌ Formatting issues found. Run 'npm run format' to fix."
+    exit 1
+}
+
+echo "✅ Pre-commit checks passed!"

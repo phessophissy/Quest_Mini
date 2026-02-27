@@ -1,0 +1,67 @@
+# EditorConfig helps maintain consistent coding styles
+# https://editorconfig.org
+
+root = true
+
+# Default settings for all files
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+max_line_length = 100
+
+# JavaScript and TypeScript
+[*.{js,ts,jsx,tsx}]
+indent_size = 2
+quote_type = single
+
+# Solidity files
+[*.sol]
+indent_size = 4
+max_line_length = 120
+
+# JSON files
+[*.json]
+indent_size = 2
+insert_final_newline = false
+
+# YAML files
+[*.{yml,yaml}]
+indent_size = 2
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# CSS files
+[*.css]
+indent_size = 2
+
+# HTML files
+[*.html]
+indent_size = 2
+
+# Shell scripts
+[*.sh]
+indent_size = 2
+end_of_line = lf
+
+# Makefile requires tabs
+[Makefile]
+indent_style = tab
+
+# Package files
+[{package.json,package-lock.json}]
+indent_size = 2
+
+# Config files
+[.{eslintrc,prettierrc,babelrc}]
+indent_size = 2
+
+# Git files
+[.git*]
+indent_size = 2

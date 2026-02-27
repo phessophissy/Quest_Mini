@@ -1,0 +1,19 @@
+# Solhint ignore patterns
+
+# Dependencies
+node_modules/
+
+# Build artifacts
+artifacts/
+cache/
+coverage/
+typechain-types/
+
+# Test mocks (if they intentionally break rules)
+test/mocks/
+
+# External contracts (audited)
+contracts/external/
+
+# Flatten output
+flat/

@@ -1,0 +1,129 @@
+# Dependabot Configuration
+# Automates dependency updates for security and maintenance
+# Documentation: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+
+version: 2
+updates:
+  # Root package.json (frontend)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "frontend"
+    reviewers:
+      - "AdekunleBamz"
+    groups:
+      # Group minor and patch updates together
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # Ignore major version updates for stability
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  # Contracts package.json (Hardhat, OpenZeppelin)
+  - package-ecosystem: "npm"
+    directory: "/contracts"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(contracts-deps)"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "contracts"
+      - "security"
+    reviewers:
+      - "AdekunleBamz"
+    groups:
+      # Group OpenZeppelin updates (security critical)
+      openzeppelin:
+        patterns:
+          - "@openzeppelin/*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group Hardhat ecosystem updates
+      hardhat:
+        patterns:
+          - "hardhat*"
+          - "@nomicfoundation/*"
+          - "@nomiclabs/*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group testing frameworks
+      testing:
+        patterns:
+          - "chai*"
+          - "mocha*"
+          - "@types/chai*"
+          - "@types/mocha*"
+    # Be more careful with contract dependencies
+    ignore:
+      # Don't auto-update major versions
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      # Pin OpenZeppelin to audited versions
+      - dependency-name: "@openzeppelin/contracts"
+        versions: [">=5.0.0"]
+
+  # Function package (wallet generator)
+  - package-ecosystem: "npm"
+    directory: "/function"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(function-deps)"
+    labels:
+      - "dependencies"
+      - "function"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(ci)"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "ci-cd"
+    groups:
+      # Group all GitHub Actions updates
+      github-actions:
+        patterns:
+          - "*"
+
+# Registries configuration (if using private packages)
+# registries:
+#   npm-registry:
+#     type: npm-registry
+#     url: https://registry.npmjs.org
+#     replaces-base: true
